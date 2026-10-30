@@ -1,0 +1,6 @@
+# Streamlit Community Cloud reads this file for application runtime.
+streamlit>=1.35,<2
+pandas>=2.1,<3
+numpy>=1.26,<3
+scikit-learn>=1.6,<1.9
+joblib>=1.3,<2

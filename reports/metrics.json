@@ -1,0 +1,60 @@
+{
+  "selected_algorithm": "RandomForest",
+  "selected_hyperparameters": {
+    "classifier__max_depth": null,
+    "classifier__min_samples_leaf": 2,
+    "classifier__n_estimators": 180
+  },
+  "selected_cv_pr_auc": 0.700141852835699,
+  "holdout_average_precision": 0.7184777742339935,
+  "holdout_roc_auc": 0.9154007901709522,
+  "holdout_precision_at_0_5": 0.8461538461538461,
+  "holdout_recall_at_0_5": 0.41509433962264153,
+  "holdout_f1_at_0_5": 0.5569620253164557,
+  "holdout_accuracy_at_0_5": 0.8728813559322034,
+  "test_positive_rate": 0.19249394673123488,
+  "top_20pct_positive_rate": 0.6686746987951807,
+  "top_20pct_lift": 3.473744032734712,
+  "confusion_matrix": [
+    [
+      655,
+      12
+    ],
+    [
+      93,
+      66
+    ]
+  ],
+  "n_train": 3302,
+  "n_test": 826,
+  "decision_threshold": 0.5,
+  "tracking_mode": "mlflow_and_json",
+  "cv_results_by_model": [
+    {
+      "algorithm": "DecisionTree",
+      "best_cv_pr_auc": 0.5530467335092977,
+      "best_params": {
+        "classifier__max_depth": 8,
+        "classifier__min_samples_leaf": 8
+      }
+    },
+    {
+      "algorithm": "RandomForest",
+      "best_cv_pr_auc": 0.700141852835699,
+      "best_params": {
+        "classifier__max_depth": null,
+        "classifier__min_samples_leaf": 2,
+        "classifier__n_estimators": 180
+      }
+    },
+    {
+      "algorithm": "GradientBoosting",
+      "best_cv_pr_auc": 0.6058992801110189,
+      "best_params": {
+        "classifier__learning_rate": 0.1,
+        "classifier__max_depth": 2,
+        "classifier__n_estimators": 150
+      }
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "dataset": "data/tourism.csv",
+  "rows": 4128,
+  "columns": 21,
+  "missing_cells": 0,
+  "duplicate_customer_ids": 0,
+  "target_distribution": {
+    "0": 3331,
+    "1": 797
+  },
+  "purchase_rate": 0.193072,
+  "unrecognized_columns": [],
+  "validation_status": "PASS"
+}

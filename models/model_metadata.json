@@ -1,0 +1,61 @@
+{
+  "features": [
+    "Age",
+    "CityTier",
+    "Occupation",
+    "Gender",
+    "NumberOfPersonVisiting",
+    "PreferredPropertyStar",
+    "MaritalStatus",
+    "NumberOfTrips",
+    "Passport",
+    "OwnCar",
+    "NumberOfChildrenVisiting",
+    "Designation",
+    "MonthlyIncome"
+  ],
+  "numeric_features": [
+    "Age",
+    "CityTier",
+    "NumberOfPersonVisiting",
+    "PreferredPropertyStar",
+    "NumberOfTrips",
+    "Passport",
+    "OwnCar",
+    "NumberOfChildrenVisiting",
+    "MonthlyIncome"
+  ],
+  "categorical_features": [
+    "Occupation",
+    "Gender",
+    "MaritalStatus",
+    "Designation"
+  ],
+  "categories": {
+    "Occupation": [
+      "Free Lancer",
+      "Large Business",
+      "Salaried",
+      "Small Business"
+    ],
+    "Gender": [
+      "Female",
+      "Male"
+    ],
+    "MaritalStatus": [
+      "Divorced",
+      "Married",
+      "Single"
+    ],
+    "Designation": [
+      "AVP",
+      "Executive",
+      "Manager",
+      "Senior Manager",
+      "VP"
+    ]
+  },
+  "trained_utc": "2026-10-24T11:03:00.283606+00:00",
+  "selected_model": "RandomForest",
+  "positive_class": 1
+}

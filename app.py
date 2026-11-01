@@ -31,9 +31,10 @@ def load_model():
 st.title("Visit with Us")
 st.subheader("Travel package purchase prediction")
 st.write(
-    "Enter a customer profile to estimate the probability of a historical "
-    "travel package purchase. The training data does not separately identify "
-    "Wellness package purchases."
+    "Estimate customer purchase propensity for the Wellness Tourism Package "
+    "business objective using the historical ProdTaken outcome. The precise "
+    "scope of that historical purchase label is awaiting clarification "
+    "from the project team."
 )
 
 try:

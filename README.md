@@ -1,5 +1,7 @@
 # Tourism-Package-Predictions
-Predicting customer purchases of tourism packages using machine learning.
+Predicting customer purchase propensity for the Wellness Tourism Package business objective using machine learning.
+
+This project models the binary `ProdTaken` outcome in accordance with the assignment's Wellness Tourism Package business objective. The precise scope of the historical purchase label is awaiting clarification from the project team.
 
 ## Running the project locally
 

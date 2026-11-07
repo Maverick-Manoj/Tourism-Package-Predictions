@@ -110,8 +110,10 @@ if submitted:
     st.metric("Predicted purchase probability", f"{probability:.1%}")
     st.progress(int(round(probability * 100)))
     st.caption(
-        "A 50% cutoff is shown for reference. Marketing teams should set "
-        "their outreach threshold using campaign costs and capacity."
+        f"The model-selected outreach threshold is "
+        f"{metadata['recommended_threshold']:.0%}, chosen using out-of-fold "
+        "training predictions to maximize F1. Marketing teams should "
+        "also consider campaign costs and capacity when choosing a cutoff."
     )
     with st.expander("Customer inputs"):
         st.dataframe(customer_data, hide_index=True, use_container_width=True)

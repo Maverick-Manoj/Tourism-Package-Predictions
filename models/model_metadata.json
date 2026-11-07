@@ -55,7 +55,16 @@
       "VP"
     ]
   },
-  "trained_utc": "2026-10-30T22:16:57.310579+00:00",
-  "selected_model": "RandomForest",
+  "trained_utc": "2026-11-07T14:10:37.311091+00:00",
+  "selected_model": "Bagging",
+  "algorithms_compared": [
+    "DecisionTree",
+    "Bagging",
+    "RandomForest",
+    "AdaBoost",
+    "GradientBoosting"
+  ],
+  "recommended_threshold": 0.37,
+  "scikit_learn_version": "1.8.0",
   "positive_class": 1
 }

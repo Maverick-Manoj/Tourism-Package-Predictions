@@ -1,28 +1,46 @@
 {
-  "selected_algorithm": "RandomForest",
+  "selected_algorithm": "Bagging",
   "selected_hyperparameters": {
-    "classifier__max_depth": null,
-    "classifier__min_samples_leaf": 2,
-    "classifier__n_estimators": 180
+    "classifier__estimator__min_samples_leaf": 1,
+    "classifier__max_samples": 1.0,
+    "classifier__n_estimators": 200
   },
-  "selected_cv_pr_auc": 0.700141852835699,
-  "holdout_average_precision": 0.7184777742339935,
-  "holdout_roc_auc": 0.9154007901709522,
-  "holdout_precision_at_0_5": 0.8461538461538461,
-  "holdout_recall_at_0_5": 0.41509433962264153,
-  "holdout_f1_at_0_5": 0.5569620253164557,
-  "holdout_accuracy_at_0_5": 0.8728813559322034,
-  "test_positive_rate": 0.19249394673123488,
-  "top_20pct_positive_rate": 0.6686746987951807,
-  "top_20pct_lift": 3.473744032734712,
-  "confusion_matrix": [
+  "selected_cv_pr_auc": 0.7602206097544212,
+  "holdout_average_precision": 0.8178930376947966,
+  "holdout_roc_auc": 0.9420572732501673,
+  "holdout_precision_at_0_5": 0.853448275862069,
+  "holdout_recall_at_0_5": 0.6226415094339622,
+  "holdout_f1_at_0_5": 0.72,
+  "holdout_accuracy_at_0_5": 0.9067796610169492,
+  "tuned_threshold": 0.37,
+  "threshold_selection": "max F1 on out-of-fold training predictions",
+  "threshold_train_oof_f1": 0.7206225680933851,
+  "holdout_precision_at_tuned": 0.7531645569620253,
+  "holdout_recall_at_tuned": 0.7484276729559748,
+  "holdout_f1_at_tuned": 0.750788643533123,
+  "holdout_accuracy_at_tuned": 0.9043583535108959,
+  "customers_flagged_pct_at_tuned": 19.128329297820823,
+  "confusion_matrix_at_tuned": [
     [
-      655,
-      12
+      628,
+      39
     ],
     [
-      93,
-      66
+      40,
+      119
+    ]
+  ],
+  "test_positive_rate": 0.19249394673123488,
+  "top_20pct_positive_rate": 0.7349397590361446,
+  "top_20pct_lift": 3.8179889368795936,
+  "confusion_matrix": [
+    [
+      650,
+      17
+    ],
+    [
+      60,
+      99
     ]
   ],
   "n_train": 3302,
@@ -32,29 +50,170 @@
   "cv_results_by_model": [
     {
       "algorithm": "DecisionTree",
-      "best_cv_pr_auc": 0.5530467335092977,
+      "best_cv_pr_auc": 0.570800928732815,
       "best_params": {
-        "classifier__max_depth": 8,
-        "classifier__min_samples_leaf": 8
+        "classifier__class_weight": null,
+        "classifier__max_depth": 10,
+        "classifier__min_samples_leaf": 5
+      }
+    },
+    {
+      "algorithm": "Bagging",
+      "best_cv_pr_auc": 0.7602206097544212,
+      "best_params": {
+        "classifier__estimator__min_samples_leaf": 1,
+        "classifier__max_samples": 1.0,
+        "classifier__n_estimators": 200
       }
     },
     {
       "algorithm": "RandomForest",
-      "best_cv_pr_auc": 0.700141852835699,
+      "best_cv_pr_auc": 0.7524615375762554,
       "best_params": {
+        "classifier__class_weight": "balanced_subsample",
         "classifier__max_depth": null,
-        "classifier__min_samples_leaf": 2,
-        "classifier__n_estimators": 180
+        "classifier__min_samples_leaf": 1,
+        "classifier__n_estimators": 200
+      }
+    },
+    {
+      "algorithm": "AdaBoost",
+      "best_cv_pr_auc": 0.5957430226541953,
+      "best_params": {
+        "classifier__estimator__max_depth": 3,
+        "classifier__learning_rate": 1.0,
+        "classifier__n_estimators": 300
       }
     },
     {
       "algorithm": "GradientBoosting",
-      "best_cv_pr_auc": 0.6058992801110189,
+      "best_cv_pr_auc": 0.7600406239200644,
       "best_params": {
         "classifier__learning_rate": 0.1,
-        "classifier__max_depth": 2,
-        "classifier__n_estimators": 150
+        "classifier__max_depth": 5,
+        "classifier__n_estimators": 300
       }
+    }
+  ],
+  "threshold_sweep": [
+    {
+      "threshold": 0.1,
+      "precision": 0.4,
+      "recall": 0.9685534591194969,
+      "f1": 0.5661764705882353,
+      "customers_flagged_pct": 46.61016949152542
+    },
+    {
+      "threshold": 0.15,
+      "precision": 0.474025974025974,
+      "recall": 0.9182389937106918,
+      "f1": 0.6252676659528907,
+      "customers_flagged_pct": 37.28813559322034
+    },
+    {
+      "threshold": 0.2,
+      "precision": 0.5607843137254902,
+      "recall": 0.89937106918239,
+      "f1": 0.6908212560386473,
+      "customers_flagged_pct": 30.871670702179177
+    },
+    {
+      "threshold": 0.25,
+      "precision": 0.6435185185185185,
+      "recall": 0.8742138364779874,
+      "f1": 0.7413333333333333,
+      "customers_flagged_pct": 26.150121065375302
+    },
+    {
+      "threshold": 0.3,
+      "precision": 0.7065217391304348,
+      "recall": 0.8176100628930818,
+      "f1": 0.7580174927113703,
+      "customers_flagged_pct": 22.27602905569007
+    },
+    {
+      "threshold": 0.35,
+      "precision": 0.7393939393939394,
+      "recall": 0.7672955974842768,
+      "f1": 0.7530864197530864,
+      "customers_flagged_pct": 19.975786924939467
+    },
+    {
+      "threshold": 0.4,
+      "precision": 0.7671232876712328,
+      "recall": 0.7044025157232704,
+      "f1": 0.7344262295081967,
+      "customers_flagged_pct": 17.675544794188863
+    },
+    {
+      "threshold": 0.45,
+      "precision": 0.8188976377952756,
+      "recall": 0.6540880503144654,
+      "f1": 0.7272727272727273,
+      "customers_flagged_pct": 15.375302663438257
+    },
+    {
+      "threshold": 0.5,
+      "precision": 0.853448275862069,
+      "recall": 0.6226415094339622,
+      "f1": 0.72,
+      "customers_flagged_pct": 14.043583535108958
+    },
+    {
+      "threshold": 0.55,
+      "precision": 0.8773584905660378,
+      "recall": 0.5849056603773585,
+      "f1": 0.7018867924528301,
+      "customers_flagged_pct": 12.832929782082324
+    },
+    {
+      "threshold": 0.6,
+      "precision": 0.9,
+      "recall": 0.5094339622641509,
+      "f1": 0.6506024096385542,
+      "customers_flagged_pct": 10.895883777239709
+    },
+    {
+      "threshold": 0.65,
+      "precision": 0.925,
+      "recall": 0.46540880503144655,
+      "f1": 0.6192468619246861,
+      "customers_flagged_pct": 9.685230024213075
+    },
+    {
+      "threshold": 0.7,
+      "precision": 0.9104477611940298,
+      "recall": 0.3836477987421384,
+      "f1": 0.5398230088495575,
+      "customers_flagged_pct": 8.111380145278451
+    },
+    {
+      "threshold": 0.75,
+      "precision": 0.9122807017543859,
+      "recall": 0.3270440251572327,
+      "f1": 0.48148148148148145,
+      "customers_flagged_pct": 6.900726392251816
+    },
+    {
+      "threshold": 0.8,
+      "precision": 0.925,
+      "recall": 0.23270440251572327,
+      "f1": 0.37185929648241206,
+      "customers_flagged_pct": 4.842615012106537
+    },
+    {
+      "threshold": 0.85,
+      "precision": 0.9090909090909091,
+      "recall": 0.12578616352201258,
+      "f1": 0.22099447513812154,
+      "customers_flagged_pct": 2.663438256658596
+    },
+    {
+      "threshold": 0.9,
+      "precision": 0.875,
+      "recall": 0.0880503144654088,
+      "f1": 0.16,
+      "customers_flagged_pct": 1.937046004842615
     }
   ]
 }

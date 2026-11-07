@@ -399,9 +399,9 @@
       "classifier__learning_rate": 0.3,
       "classifier__n_estimators": 100
     },
-    "cv_mean_pr_auc": 0.5845306004610739,
-    "cv_std_pr_auc": 0.013393520807639187,
-    "cv_mean_roc_auc": 0.8125976137245404
+    "cv_mean_pr_auc": 0.5845707092619908,
+    "cv_std_pr_auc": 0.013443742446924381,
+    "cv_mean_roc_auc": 0.8126224026644236
   },
   {
     "algorithm": "AdaBoost",
@@ -411,9 +411,9 @@
       "classifier__learning_rate": 0.3,
       "classifier__n_estimators": 300
     },
-    "cv_mean_pr_auc": 0.5860501401733177,
-    "cv_std_pr_auc": 0.01610364261168288,
-    "cv_mean_roc_auc": 0.8149911720782702
+    "cv_mean_pr_auc": 0.5861820822998719,
+    "cv_std_pr_auc": 0.0162253942998797,
+    "cv_mean_roc_auc": 0.81523450603141
   },
   {
     "algorithm": "AdaBoost",
@@ -423,9 +423,9 @@
       "classifier__learning_rate": 1.0,
       "classifier__n_estimators": 100
     },
-    "cv_mean_pr_auc": 0.5673509993142027,
-    "cv_std_pr_auc": 0.007788750869784543,
-    "cv_mean_roc_auc": 0.8103570368800903
+    "cv_mean_pr_auc": 0.566720646080516,
+    "cv_std_pr_auc": 0.0075774964404240665,
+    "cv_mean_roc_auc": 0.8093134906764324
   },
   {
     "algorithm": "AdaBoost",
@@ -435,9 +435,9 @@
       "classifier__learning_rate": 1.0,
       "classifier__n_estimators": 300
     },
-    "cv_mean_pr_auc": 0.5957430226541953,
-    "cv_std_pr_auc": 0.017626535495208977,
-    "cv_mean_roc_auc": 0.8318191755068914
+    "cv_mean_pr_auc": 0.5949812537212659,
+    "cv_std_pr_auc": 0.01678900146517939,
+    "cv_mean_roc_auc": 0.8312553227224035
   },
   {
     "algorithm": "GradientBoosting",

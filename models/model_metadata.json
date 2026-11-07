@@ -55,7 +55,7 @@
       "VP"
     ]
   },
-  "trained_utc": "2026-11-07T14:10:37.311091+00:00",
+  "trained_utc": "2026-11-07T14:11:54.227662+00:00",
   "selected_model": "Bagging",
   "algorithms_compared": [
     "DecisionTree",

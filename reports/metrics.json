@@ -78,7 +78,7 @@
     },
     {
       "algorithm": "AdaBoost",
-      "best_cv_pr_auc": 0.5957430226541953,
+      "best_cv_pr_auc": 0.5949812537212659,
       "best_params": {
         "classifier__estimator__max_depth": 3,
         "classifier__learning_rate": 1.0,

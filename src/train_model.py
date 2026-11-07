@@ -1,4 +1,13 @@
-"""Compare classifiers and save the best cross-validated model."""
+"""Compare classifiers, choose a decision threshold and save the best model.
+
+Candidate algorithms: Decision Tree, Bagging, Random Forest, AdaBoost,
+Gradient Boosting and (when installed) XGBoost. Every algorithm is tuned with
+stratified cross-validation on the training split only.
+
+The decision threshold is chosen from out-of-fold predictions on the training
+split, so the held-out test split is used only to report results, never to
+pick the model, its parameters or its threshold.
+"""
 
 import argparse
 import json
@@ -8,8 +17,14 @@ from pathlib import Path
 import joblib
 import numpy as np
 import pandas as pd
+import sklearn
 from sklearn.compose import ColumnTransformer
-from sklearn.ensemble import GradientBoostingClassifier, RandomForestClassifier
+from sklearn.ensemble import (
+    AdaBoostClassifier,
+    BaggingClassifier,
+    GradientBoostingClassifier,
+    RandomForestClassifier,
+)
 from sklearn.impute import SimpleImputer
 from sklearn.metrics import (
     accuracy_score,
@@ -17,11 +32,12 @@ from sklearn.metrics import (
     classification_report,
     confusion_matrix,
     f1_score,
+    precision_recall_curve,
     precision_score,
     recall_score,
     roc_auc_score,
 )
-from sklearn.model_selection import GridSearchCV, StratifiedKFold
+from sklearn.model_selection import GridSearchCV, StratifiedKFold, cross_val_predict
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.tree import DecisionTreeClassifier
@@ -33,6 +49,15 @@ from src.common import (
     ROOT,
     TARGET,
 )
+
+try:
+    from xgboost import XGBClassifier
+except ImportError:  # the notebook still runs where XGBoost is not installed
+    XGBClassifier = None
+
+RANDOM_SEED = 42
+REFERENCE_THRESHOLD = 0.50
+SWEEP_THRESHOLDS = np.round(np.arange(0.10, 0.901, 0.05), 2)
 
 
 def json_value(value):
@@ -65,34 +90,124 @@ def make_pipeline(classifier):
     ])
 
 
-def candidate_models():
-    random_seed = 42
+def candidate_models(positive_weight=1.0):
+    """Return {name: (estimator, parameter grid)} for every algorithm tried.
 
-    return {
+    ``positive_weight`` is the negative-to-positive ratio in the training
+    data. It is one of the values tried for XGBoost's ``scale_pos_weight``.
+    """
+    seed = RANDOM_SEED
+
+    models = {
         "DecisionTree": (
-            DecisionTreeClassifier(random_state=random_seed),
+            DecisionTreeClassifier(random_state=seed),
             {
-                "classifier__max_depth": [4, 8],
-                "classifier__min_samples_leaf": [2, 8],
+                "classifier__max_depth": [6, 10, None],
+                "classifier__min_samples_leaf": [2, 5],
+                "classifier__class_weight": [None, "balanced"],
+            },
+        ),
+        "Bagging": (
+            BaggingClassifier(
+                estimator=DecisionTreeClassifier(random_state=seed),
+                random_state=seed,
+                n_jobs=1,
+            ),
+            {
+                "classifier__n_estimators": [100, 200],
+                "classifier__max_samples": [0.8, 1.0],
+                "classifier__estimator__min_samples_leaf": [1, 2],
             },
         ),
         "RandomForest": (
-            RandomForestClassifier(random_state=random_seed, n_jobs=1),
+            RandomForestClassifier(random_state=seed, n_jobs=1),
             {
-                "classifier__n_estimators": [100, 180],
-                "classifier__max_depth": [6, None],
-                "classifier__min_samples_leaf": [2],
+                "classifier__n_estimators": [200, 400],
+                "classifier__max_depth": [None],
+                "classifier__min_samples_leaf": [1, 2],
+                "classifier__class_weight": [None, "balanced_subsample"],
+            },
+        ),
+        "AdaBoost": (
+            AdaBoostClassifier(
+                estimator=DecisionTreeClassifier(random_state=seed),
+                random_state=seed,
+            ),
+            {
+                "classifier__n_estimators": [100, 300],
+                "classifier__learning_rate": [0.3, 1.0],
+                "classifier__estimator__max_depth": [1, 3],
             },
         ),
         "GradientBoosting": (
-            GradientBoostingClassifier(random_state=random_seed),
+            GradientBoostingClassifier(random_state=seed),
             {
-                "classifier__n_estimators": [100, 150],
+                "classifier__n_estimators": [150, 300],
                 "classifier__learning_rate": [0.05, 0.1],
-                "classifier__max_depth": [2],
+                "classifier__max_depth": [3, 5],
             },
         ),
     }
+
+    if XGBClassifier is not None:
+        models["XGBoost"] = (
+            XGBClassifier(
+                objective="binary:logistic",
+                eval_metric="logloss",
+                tree_method="hist",
+                random_state=seed,
+                n_jobs=1,
+                verbosity=0,
+            ),
+            {
+                "classifier__n_estimators": [200, 400],
+                "classifier__learning_rate": [0.05, 0.1],
+                "classifier__max_depth": [4, 6],
+                "classifier__scale_pos_weight": [1.0, round(positive_weight, 2)],
+            },
+        )
+
+    return models
+
+
+def best_f1_threshold(y_true, scores, low=0.05, high=0.95):
+    """Return (threshold, f1) that maximises F1, kept inside [low, high]."""
+    precision, recall, thresholds = precision_recall_curve(y_true, scores)
+    precision, recall = precision[:-1], recall[:-1]
+    total = precision + recall
+    f1 = np.divide(
+        2 * precision * recall, total, out=np.zeros_like(total), where=total > 0
+    )
+    best = int(np.argmax(f1))
+    threshold = float(np.clip(np.round(thresholds[best], 2), low, high))
+    return threshold, float(f1[best])
+
+
+def scores_at(y_true, probabilities, threshold):
+    """Precision, recall, F1 and workload at one probability cutoff."""
+    labels = (probabilities >= threshold).astype(int)
+    return {
+        "threshold": float(threshold),
+        "precision": float(precision_score(y_true, labels, zero_division=0)),
+        "recall": float(recall_score(y_true, labels, zero_division=0)),
+        "f1": float(f1_score(y_true, labels, zero_division=0)),
+        "accuracy": float(accuracy_score(y_true, labels)),
+        "customers_flagged_pct": float(100 * labels.mean()),
+        "confusion_matrix": confusion_matrix(
+            y_true, labels, labels=[0, 1]
+        ).tolist(),
+    }
+
+
+def threshold_sweep(y_true, probabilities):
+    """Show the precision/recall trade-off across cutoffs (reporting only)."""
+    rows = []
+    for threshold in SWEEP_THRESHOLDS:
+        result = scores_at(y_true, probabilities, threshold)
+        result.pop("confusion_matrix")
+        result.pop("accuracy")
+        rows.append(result)
+    return rows
 
 
 def experiment(train_path, test_path, model_dir, report_dir, tracking_dir):
@@ -123,14 +238,19 @@ def experiment(train_path, test_path, model_dir, report_dir, tracking_dir):
         mlflow.set_tracking_uri(tracking_dir.resolve().as_uri())
         mlflow.set_experiment("tourism-purchase-prediction")
 
+    positive_weight = float(
+        (training_target == 0).sum() / max((training_target == 1).sum(), 1)
+    )
     cross_validation = StratifiedKFold(
-        n_splits=3, shuffle=True, random_state=42
+        n_splits=3, shuffle=True, random_state=RANDOM_SEED
     )
     trials = []
     comparisons = []
     best_result = None
 
-    for name, (classifier, parameter_grid) in candidate_models().items():
+    for name, (classifier, parameter_grid) in candidate_models(
+        positive_weight
+    ).items():
         search = GridSearchCV(
             estimator=make_pipeline(classifier),
             param_grid=parameter_grid,
@@ -158,6 +278,7 @@ def experiment(train_path, test_path, model_dir, report_dir, tracking_dir):
 
             if mlflow is not None:
                 with mlflow.start_run(run_name=f"{name}_trial_{index + 1}"):
+                    mlflow.set_tags({"stage": "tuning_trial", "algorithm": name})
                     mlflow.log_param("algorithm", name)
                     mlflow.log_params({
                         key.replace("classifier__", ""): value
@@ -185,8 +306,20 @@ def experiment(train_path, test_path, model_dir, report_dir, tracking_dir):
             }
 
     fitted_model = best_result["model"]
+
+    # Choose the cutoff from out-of-fold training predictions (no test data).
+    out_of_fold = cross_val_predict(
+        fitted_model,
+        training_features,
+        training_target,
+        cv=cross_validation,
+        method="predict_proba",
+    )[:, 1]
+    tuned_threshold, oof_f1 = best_f1_threshold(training_target, out_of_fold)
+
     probabilities = fitted_model.predict_proba(test_features)[:, 1]
-    predicted_labels = (probabilities >= 0.50).astype(int)
+    at_reference = scores_at(test_target, probabilities, REFERENCE_THRESHOLD)
+    at_tuned = scores_at(test_target, probabilities, tuned_threshold)
 
     top_count = max(1, int(np.ceil(0.20 * len(test))))
     top_rows = np.argsort(-probabilities)[:top_count]
@@ -201,32 +334,32 @@ def experiment(train_path, test_path, model_dir, report_dir, tracking_dir):
             average_precision_score(test_target, probabilities)
         ),
         "holdout_roc_auc": float(roc_auc_score(test_target, probabilities)),
-        "holdout_precision_at_0_5": float(
-            precision_score(test_target, predicted_labels, zero_division=0)
-        ),
-        "holdout_recall_at_0_5": float(
-            recall_score(test_target, predicted_labels, zero_division=0)
-        ),
-        "holdout_f1_at_0_5": float(
-            f1_score(test_target, predicted_labels, zero_division=0)
-        ),
-        "holdout_accuracy_at_0_5": float(
-            accuracy_score(test_target, predicted_labels)
-        ),
+        "holdout_precision_at_0_5": at_reference["precision"],
+        "holdout_recall_at_0_5": at_reference["recall"],
+        "holdout_f1_at_0_5": at_reference["f1"],
+        "holdout_accuracy_at_0_5": at_reference["accuracy"],
+        "tuned_threshold": tuned_threshold,
+        "threshold_selection": "max F1 on out-of-fold training predictions",
+        "threshold_train_oof_f1": oof_f1,
+        "holdout_precision_at_tuned": at_tuned["precision"],
+        "holdout_recall_at_tuned": at_tuned["recall"],
+        "holdout_f1_at_tuned": at_tuned["f1"],
+        "holdout_accuracy_at_tuned": at_tuned["accuracy"],
+        "customers_flagged_pct_at_tuned": at_tuned["customers_flagged_pct"],
+        "confusion_matrix_at_tuned": at_tuned["confusion_matrix"],
         "test_positive_rate": overall_purchase_rate,
         "top_20pct_positive_rate": top_purchase_rate,
         "top_20pct_lift": (
             top_purchase_rate / overall_purchase_rate
             if overall_purchase_rate > 0 else None
         ),
-        "confusion_matrix": confusion_matrix(
-            test_target, predicted_labels
-        ).tolist(),
+        "confusion_matrix": at_reference["confusion_matrix"],
         "n_train": len(train),
         "n_test": len(test),
-        "decision_threshold": 0.50,
+        "decision_threshold": REFERENCE_THRESHOLD,
         "tracking_mode": "mlflow_and_json" if mlflow else "json",
         "cv_results_by_model": comparisons,
+        "threshold_sweep": threshold_sweep(test_target, probabilities),
     }
 
     metadata = {
@@ -239,27 +372,66 @@ def experiment(train_path, test_path, model_dir, report_dir, tracking_dir):
         },
         "trained_utc": datetime.now(timezone.utc).isoformat(),
         "selected_model": best_result["name"],
+        "algorithms_compared": [row["algorithm"] for row in comparisons],
+        "recommended_threshold": tuned_threshold,
+        "scikit_learn_version": sklearn.__version__,
         "positive_class": 1,
     }
 
-    joblib.dump(fitted_model, model_dir / "best_model.joblib", compress=3)
-    (model_dir / "model_metadata.json").write_text(
+    model_file = model_dir / "best_model.joblib"
+    metadata_file = model_dir / "model_metadata.json"
+    metrics_file = report_dir / "metrics.json"
+    experiments_file = report_dir / "experiments.json"
+
+    joblib.dump(fitted_model, model_file, compress=3)
+    metadata_file.write_text(
         json.dumps(metadata, indent=2, default=json_value) + "\n",
         encoding="utf-8",
     )
-    (report_dir / "metrics.json").write_text(
+    metrics_file.write_text(
         json.dumps(metrics, indent=2, default=json_value) + "\n",
         encoding="utf-8",
     )
-    (report_dir / "experiments.json").write_text(
+    experiments_file.write_text(
         json.dumps(trials, indent=2, default=json_value) + "\n",
         encoding="utf-8",
     )
 
+    if mlflow is not None:
+        with mlflow.start_run(run_name="selected_model"):
+            mlflow.set_tags({
+                "stage": "final",
+                "algorithm": best_result["name"],
+            })
+            mlflow.log_param("algorithm", best_result["name"])
+            mlflow.log_params({
+                key.replace("classifier__", ""): value
+                for key, value in best_result["parameters"].items()
+            })
+            mlflow.log_param("tuned_threshold", tuned_threshold)
+            mlflow.log_metrics({
+                "cv_mean_pr_auc": metrics["selected_cv_pr_auc"],
+                "holdout_average_precision": metrics["holdout_average_precision"],
+                "holdout_roc_auc": metrics["holdout_roc_auc"],
+                "holdout_f1_at_0_5": metrics["holdout_f1_at_0_5"],
+                "holdout_precision_at_tuned": metrics["holdout_precision_at_tuned"],
+                "holdout_recall_at_tuned": metrics["holdout_recall_at_tuned"],
+                "holdout_f1_at_tuned": metrics["holdout_f1_at_tuned"],
+                "top_20pct_lift": metrics["top_20pct_lift"],
+            })
+            for artifact in (model_file, metadata_file, metrics_file):
+                mlflow.log_artifact(str(artifact))
+
     print(f"Selected model: {best_result['name']}")
+    print(f"Tuned threshold (train out-of-fold F1): {tuned_threshold:.2f}")
     print(f"Test ROC-AUC: {metrics['holdout_roc_auc']:.3f}")
     print(f"Test average precision: {metrics['holdout_average_precision']:.3f}")
-    print(classification_report(test_target, predicted_labels, zero_division=0))
+    print(f"Test report at threshold {tuned_threshold:.2f}:")
+    print(classification_report(
+        test_target,
+        (probabilities >= tuned_threshold).astype(int),
+        zero_division=0,
+    ))
     return fitted_model, metrics, trials
 
 

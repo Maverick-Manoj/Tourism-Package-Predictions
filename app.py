@@ -31,10 +31,13 @@ def load_model():
 st.title("Visit with Us")
 st.subheader("Travel package purchase prediction")
 st.write(
-    "Estimate customer purchase propensity for the Wellness Tourism Package "
-    "business objective using the historical ProdTaken outcome. The precise "
-    "scope of that historical purchase label is awaiting clarification "
-    "from the project team."
+    "Estimate customer purchase propensity for the Wellness Tourism Package. "
+    "This project assumes that the historical binary ProdTaken variable "
+    "(1 = purchased, 0 = not purchased) represents Wellness Tourism Package "
+    "purchase status. The course team has confirmed this interpretation "
+    "is acceptable when documented and applied consistently. The dataset "
+    "does not independently identify the package type, so this remains "
+    "a modelling assumption and a limitation of the predictions."
 )
 
 try:

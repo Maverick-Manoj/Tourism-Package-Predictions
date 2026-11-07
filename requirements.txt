@@ -2,5 +2,8 @@
 streamlit>=1.35,<2
 pandas>=2.1,<3
 numpy>=1.26,<3
-scikit-learn>=1.6,<1.9
+# Exact pin: the committed model is a pickle, so the version that trained it must load it.
+scikit-learn==1.8.0
 joblib>=1.3,<2
+# CPU-only XGBoost build. Needed so the app can load the model if XGBoost is ever selected.
+xgboost-cpu>=2.1

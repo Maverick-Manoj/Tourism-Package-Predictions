@@ -1,7 +1,13 @@
 # Tourism-Package-Predictions
 Predicting customer purchase propensity for the Wellness Tourism Package business objective using machine learning.
 
-This project models the binary `ProdTaken` outcome in accordance with the assignment's Wellness Tourism Package business objective. The precise scope of the historical purchase label is awaiting clarification from the project team.
+This project predicts customer purchase propensity for the Wellness Tourism Package.
+
+The dataset contains a binary target variable, `ProdTaken` (1 = purchased, 0 = not purchased). Since the dataset does not separately identify Wellness Tourism Package purchases, this project assumes that `ProdTaken` represents Wellness Tourism Package purchase status.
+
+The course team has confirmed that this interpretation is acceptable, provided the assumption is documented and the modelling approach and business recommendations remain consistent with it.
+
+The dataset itself does not independently verify the package type. This is a documented modelling assumption and a limitation when interpreting the results.
 
 ## Running the project locally
 

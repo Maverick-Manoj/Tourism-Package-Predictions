@@ -534,5 +534,213 @@
     "cv_mean_pr_auc": 0.7600406239200644,
     "cv_std_pr_auc": 0.011996029953225887,
     "cv_mean_roc_auc": 0.9029009244429121
+  },
+  {
+    "algorithm": "XGBoost",
+    "trial": 1,
+    "parameters": {
+      "classifier__learning_rate": 0.05,
+      "classifier__max_depth": 4,
+      "classifier__n_estimators": 200,
+      "classifier__scale_pos_weight": 1.0
+    },
+    "cv_mean_pr_auc": 0.6450429987365122,
+    "cv_std_pr_auc": 0.01570065085564957,
+    "cv_mean_roc_auc": 0.8514100484353607
+  },
+  {
+    "algorithm": "XGBoost",
+    "trial": 2,
+    "parameters": {
+      "classifier__learning_rate": 0.05,
+      "classifier__max_depth": 4,
+      "classifier__n_estimators": 200,
+      "classifier__scale_pos_weight": 4.18
+    },
+    "cv_mean_pr_auc": 0.639934269515576,
+    "cv_std_pr_auc": 0.015856435831001412,
+    "cv_mean_roc_auc": 0.8595739807040631
+  },
+  {
+    "algorithm": "XGBoost",
+    "trial": 3,
+    "parameters": {
+      "classifier__learning_rate": 0.05,
+      "classifier__max_depth": 4,
+      "classifier__n_estimators": 400,
+      "classifier__scale_pos_weight": 1.0
+    },
+    "cv_mean_pr_auc": 0.6583477747779231,
+    "cv_std_pr_auc": 0.011608531992691053,
+    "cv_mean_roc_auc": 0.8642178170064829
+  },
+  {
+    "algorithm": "XGBoost",
+    "trial": 4,
+    "parameters": {
+      "classifier__learning_rate": 0.05,
+      "classifier__max_depth": 4,
+      "classifier__n_estimators": 400,
+      "classifier__scale_pos_weight": 4.18
+    },
+    "cv_mean_pr_auc": 0.6645234952079515,
+    "cv_std_pr_auc": 0.023384955096682227,
+    "cv_mean_roc_auc": 0.8697025486820863
+  },
+  {
+    "algorithm": "XGBoost",
+    "trial": 5,
+    "parameters": {
+      "classifier__learning_rate": 0.05,
+      "classifier__max_depth": 6,
+      "classifier__n_estimators": 200,
+      "classifier__scale_pos_weight": 1.0
+    },
+    "cv_mean_pr_auc": 0.6958272343575732,
+    "cv_std_pr_auc": 0.0318371197516041,
+    "cv_mean_roc_auc": 0.8811066996441034
+  },
+  {
+    "algorithm": "XGBoost",
+    "trial": 6,
+    "parameters": {
+      "classifier__learning_rate": 0.05,
+      "classifier__max_depth": 6,
+      "classifier__n_estimators": 200,
+      "classifier__scale_pos_weight": 4.18
+    },
+    "cv_mean_pr_auc": 0.7011884584877838,
+    "cv_std_pr_auc": 0.02261215109961654,
+    "cv_mean_roc_auc": 0.8848203189237603
+  },
+  {
+    "algorithm": "XGBoost",
+    "trial": 7,
+    "parameters": {
+      "classifier__learning_rate": 0.05,
+      "classifier__max_depth": 6,
+      "classifier__n_estimators": 400,
+      "classifier__scale_pos_weight": 1.0
+    },
+    "cv_mean_pr_auc": 0.7178506666826827,
+    "cv_std_pr_auc": 0.023467915733559178,
+    "cv_mean_roc_auc": 0.8899685045795197
+  },
+  {
+    "algorithm": "XGBoost",
+    "trial": 8,
+    "parameters": {
+      "classifier__learning_rate": 0.05,
+      "classifier__max_depth": 6,
+      "classifier__n_estimators": 400,
+      "classifier__scale_pos_weight": 4.18
+    },
+    "cv_mean_pr_auc": 0.7260637670855429,
+    "cv_std_pr_auc": 0.020965424930472255,
+    "cv_mean_roc_auc": 0.8924014783452067
+  },
+  {
+    "algorithm": "XGBoost",
+    "trial": 9,
+    "parameters": {
+      "classifier__learning_rate": 0.1,
+      "classifier__max_depth": 4,
+      "classifier__n_estimators": 200,
+      "classifier__scale_pos_weight": 1.0
+    },
+    "cv_mean_pr_auc": 0.658548706826121,
+    "cv_std_pr_auc": 0.01679144522214919,
+    "cv_mean_roc_auc": 0.8610807858083969
+  },
+  {
+    "algorithm": "XGBoost",
+    "trial": 10,
+    "parameters": {
+      "classifier__learning_rate": 0.1,
+      "classifier__max_depth": 4,
+      "classifier__n_estimators": 200,
+      "classifier__scale_pos_weight": 4.18
+    },
+    "cv_mean_pr_auc": 0.6584105910334869,
+    "cv_std_pr_auc": 0.025720319352723297,
+    "cv_mean_roc_auc": 0.8694895234059464
+  },
+  {
+    "algorithm": "XGBoost",
+    "trial": 11,
+    "parameters": {
+      "classifier__learning_rate": 0.1,
+      "classifier__max_depth": 4,
+      "classifier__n_estimators": 400,
+      "classifier__scale_pos_weight": 1.0
+    },
+    "cv_mean_pr_auc": 0.673411389292538,
+    "cv_std_pr_auc": 0.020861576662172508,
+    "cv_mean_roc_auc": 0.8662749748153682
+  },
+  {
+    "algorithm": "XGBoost",
+    "trial": 12,
+    "parameters": {
+      "classifier__learning_rate": 0.1,
+      "classifier__max_depth": 4,
+      "classifier__n_estimators": 400,
+      "classifier__scale_pos_weight": 4.18
+    },
+    "cv_mean_pr_auc": 0.6911759059498896,
+    "cv_std_pr_auc": 0.027177502184848837,
+    "cv_mean_roc_auc": 0.8772611470093533
+  },
+  {
+    "algorithm": "XGBoost",
+    "trial": 13,
+    "parameters": {
+      "classifier__learning_rate": 0.1,
+      "classifier__max_depth": 6,
+      "classifier__n_estimators": 200,
+      "classifier__scale_pos_weight": 1.0
+    },
+    "cv_mean_pr_auc": 0.7194621949568402,
+    "cv_std_pr_auc": 0.030384950573614056,
+    "cv_mean_roc_auc": 0.8880582682070856
+  },
+  {
+    "algorithm": "XGBoost",
+    "trial": 14,
+    "parameters": {
+      "classifier__learning_rate": 0.1,
+      "classifier__max_depth": 6,
+      "classifier__n_estimators": 200,
+      "classifier__scale_pos_weight": 4.18
+    },
+    "cv_mean_pr_auc": 0.731840227650237,
+    "cv_std_pr_auc": 0.03209998962057189,
+    "cv_mean_roc_auc": 0.8956605422855755
+  },
+  {
+    "algorithm": "XGBoost",
+    "trial": 15,
+    "parameters": {
+      "classifier__learning_rate": 0.1,
+      "classifier__max_depth": 6,
+      "classifier__n_estimators": 400,
+      "classifier__scale_pos_weight": 1.0
+    },
+    "cv_mean_pr_auc": 0.7294121720554441,
+    "cv_std_pr_auc": 0.031098518119169964,
+    "cv_mean_roc_auc": 0.8902406342696669
+  },
+  {
+    "algorithm": "XGBoost",
+    "trial": 16,
+    "parameters": {
+      "classifier__learning_rate": 0.1,
+      "classifier__max_depth": 6,
+      "classifier__n_estimators": 400,
+      "classifier__scale_pos_weight": 4.18
+    },
+    "cv_mean_pr_auc": 0.740915049625094,
+    "cv_std_pr_auc": 0.025691376237601354,
+    "cv_mean_roc_auc": 0.8987885623465613
   }
 ]

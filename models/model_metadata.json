@@ -55,14 +55,15 @@
       "VP"
     ]
   },
-  "trained_utc": "2026-11-07T14:11:54.227662+00:00",
+  "trained_utc": "2026-11-07T14:14:39.245528+00:00",
   "selected_model": "Bagging",
   "algorithms_compared": [
     "DecisionTree",
     "Bagging",
     "RandomForest",
     "AdaBoost",
-    "GradientBoosting"
+    "GradientBoosting",
+    "XGBoost"
   ],
   "recommended_threshold": 0.37,
   "scikit_learn_version": "1.8.0",
